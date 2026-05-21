@@ -13,28 +13,22 @@ const codeStyle: React.CSSProperties = {
 
 const capabilities: { title: string; body: string }[] = [
   {
-    title: "Researches the market",
-    body: "Tempo searches the web to understand the brand, its category, and its competitors before recommending anything.",
+    title: "Researches the product",
+    body: "Tempo searches the web to learn the product, its buyers, and how competitors advertise — before it writes anything.",
   },
   {
-    title: "Diagnoses the constraint",
-    body: "It finds where growth is actually blocked, then prioritizes channels and experiments by impact against effort.",
+    title: "Generates the batch",
+    body: "It ships a week of ad creative: persona-based angles, scroll-stopping hooks, offer variants, and Meta-ready copy across static and video.",
   },
   {
-    title: "Ships a plan",
-    body: "You get a 90-day roadmap, a ranked experiment backlog, and the metrics that ladder up to a north star.",
+    title: "Shows its reasoning",
+    body: "Every ad carries the product insight, customer angle, and performance hypothesis it was built on — so you can inspect and edit, not guess.",
   },
 ];
 
 export default function Page() {
   return (
-    <main
-      style={{
-        maxWidth: 760,
-        margin: "0 auto",
-        padding: "96px 24px 120px",
-      }}
-    >
+    <main style={{ maxWidth: 760, margin: "0 auto", padding: "96px 24px 120px" }}>
       <div
         style={{
           fontSize: 13,
@@ -56,12 +50,13 @@ export default function Page() {
           letterSpacing: -1,
         }}
       >
-        The world&apos;s first AI Head of Growth.
+        An agentic growth engine for ecommerce.
       </h1>
 
       <p style={{ fontSize: 19, lineHeight: 1.6, color: "#b6b6bd", margin: 0 }}>
-        Hand Tempo a brand. It researches the market, diagnoses what is holding
-        growth back, and delivers a 90-day plan you could start on Monday.
+        Hand Tempo a product. It researches the market, decides what is worth
+        testing, and delivers a week of ad creative — ready to run on Meta, with
+        the reasoning behind every concept.
       </p>
 
       <section
@@ -98,20 +93,18 @@ export default function Page() {
         <br />
         echo &quot;ANTHROPIC_API_KEY=sk-ant-...&quot; &gt; .env
         <br />
-        npm run tempo -- plan &quot;a B2B tool that turns SQL into dashboards&quot;
-        <br />
-        npm run tempo -- content --name Tempo --site withtempo.ai
+        npm run tempo -- ads &quot;a $39 ceramic non-stick pan for home cooks&quot; --count 10
       </code>
 
       <h2 style={{ fontSize: 15, color: "#8a8a93", margin: "32px 0 12px" }}>
         Or call the API
       </h2>
       <code style={codeStyle}>
-        curl -N localhost:3000/api/growth \
+        curl localhost:3000/api/creatives \
         <br />
         {"  "}-H &apos;content-type: application/json&apos; \
         <br />
-        {"  "}-d &apos;{"{"}&quot;mode&quot;:&quot;plan&quot;,&quot;name&quot;:&quot;Tempo&quot;,&quot;goal&quot;:&quot;300 paid teams&quot;{"}"}&apos;
+        {"  "}-d &apos;{"{"}&quot;name&quot;:&quot;Trailhead Boots&quot;,&quot;count&quot;:8{"}"}&apos;
       </code>
 
       <p
@@ -123,8 +116,8 @@ export default function Page() {
           paddingTop: 20,
         }}
       >
-        Powered by Claude. The growth plan streams as plain text from{" "}
-        <code style={{ color: "#9c9ca4" }}>/api/growth</code>.
+        Powered by Claude. <code style={{ color: "#9c9ca4" }}>/api/creatives</code>{" "}
+        returns the weekly batch as JSON — a strategy plus inspectable ad objects.
       </p>
     </main>
   );

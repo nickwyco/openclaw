@@ -2,7 +2,7 @@
   "name": "tempo",
   "version": "0.1.0",
   "private": true,
-  "description": "Tempo — the AI Head of Growth. A CLI and API agent that researches a brand and delivers a 90-day growth plan.",
+  "description": "Tempo — an agentic growth engine for ecommerce. A CLI and API agent that researches a product and generates a weekly batch of Meta ad creative.",
   "type": "module",
   "scripts": {
     "dev": "next dev",

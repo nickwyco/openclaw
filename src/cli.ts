@@ -1,7 +1,11 @@
 import { loadEnv } from "./agent/env";
-import { runAgent } from "./agent/tempo";
-import { systemPrompt, userPrompt } from "./agent/prompts";
-import type { BrandBrief, Effort, Mode } from "./agent/types";
+import { generateCreatives, research } from "./agent/tempo";
+import type {
+  CreativeBatch,
+  Effort,
+  FormatMix,
+  ProductBrief,
+} from "./agent/types";
 
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const paint = (code: string) => (s: string) =>
@@ -12,27 +16,38 @@ const cyan = paint("36");
 const red = paint("31");
 
 const EFFORTS: Effort[] = ["low", "medium", "high", "max"];
-const VALUE_FLAGS = ["name", "site", "goal", "audience", "stage", "effort"];
+const FORMATS: FormatMix[] = ["static", "video", "mixed"];
+const VALUE_FLAGS = [
+  "name",
+  "brand",
+  "url",
+  "price",
+  "audience",
+  "count",
+  "format",
+  "effort",
+];
+const MAX_COUNT = 16;
 
 function printHelp(): void {
-  process.stdout.write(`${bold("Tempo")} — the AI Head of Growth
+  process.stdout.write(`${bold("Tempo")} — the agentic growth engine for ecommerce
 
 ${bold("Usage")}
-  tempo plan <brand description>      Generate a 90-day growth strategy
-  tempo content <brand description>   Generate launch-ready marketing content
+  tempo ads <product description>     Generate this week's ad creative batch
 
 ${bold("Options")}
-  --name <name>        Brand name
-  --site <url>         Brand website
-  --goal <text>        Primary growth goal
-  --audience <text>    Target audience / ICP
-  --stage <text>       Company stage (e.g. pre-seed, Series A)
-  --effort <level>     Reasoning effort: ${EFFORTS.join(" | ")}  (default: high)
-  --no-stream          Wait for the full result instead of streaming it
+  --name <name>        Product name
+  --brand <brand>      Brand name
+  --url <url>          Product or store URL
+  --price <price>      Product price (e.g. $49)
+  --audience <text>    Target customer, if you already know it
+  --count <n>          Number of ad concepts to generate (1-${MAX_COUNT}, default 8)
+  --format <type>      Creative format: ${FORMATS.join(" | ")}  (default mixed)
+  --effort <level>     Reasoning effort: ${EFFORTS.join(" | ")}  (default high)
 
 ${bold("Examples")}
-  tempo plan "a B2B tool that turns SQL into live dashboards" --goal "300 paid teams"
-  tempo content --name Tempo --site withtempo.ai --audience "seed-stage founders"
+  tempo ads "a $39 ceramic non-stick pan for home cooks" --count 10
+  tempo ads --name "Trailhead Boots" --url example.com --format static
 
 Requires ANTHROPIC_API_KEY in your environment or a .env file.
 `);
@@ -41,20 +56,14 @@ Requires ANTHROPIC_API_KEY in your environment or a .env file.
 interface ParsedArgs {
   positional: string[];
   flags: Record<string, string>;
-  noStream: boolean;
 }
 
 function parseArgs(args: string[]): ParsedArgs {
   const positional: string[] = [];
   const flags: Record<string, string> = {};
-  let noStream = false;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg === "--no-stream") {
-      noStream = true;
-      continue;
-    }
     if (arg.startsWith("--")) {
       const key = arg.slice(2);
       if (!VALUE_FLAGS.includes(key)) {
@@ -70,11 +79,44 @@ function parseArgs(args: string[]): ParsedArgs {
     positional.push(arg);
   }
 
-  return { positional, flags, noStream };
+  return { positional, flags };
 }
 
-async function run(mode: Mode, args: string[]): Promise<void> {
-  const { positional, flags, noStream } = parseArgs(args);
+function renderBatch(batch: CreativeBatch): void {
+  const w = process.stdout;
+  const s = batch.weekly_strategy;
+
+  w.write(
+    `\n${cyan(bold("TEMPO"))}  ${dim("·")}  ${bold(`weekly creative batch — ${batch.brand}`)}\n`,
+  );
+
+  w.write(`\n${bold("STRATEGY")}\n`);
+  w.write(`  ${dim("Theme")}      ${s.theme}\n`);
+  w.write(`  ${s.rationale}\n`);
+  w.write(`  ${dim("Angles")}     ${s.angles_to_test.join("  ·  ")}\n`);
+  w.write(`  ${dim("Personas")}   ${s.personas_to_test.join("  ·  ")}\n`);
+  w.write(`  ${dim("Format")}     ${s.format_mix}\n`);
+
+  for (const ad of batch.ads) {
+    w.write(
+      `\n${cyan(bold(ad.id))}  ${dim("·")}  ${ad.format}  ${dim("·")}  ${ad.persona}\n`,
+    );
+    w.write(`  ${dim("Angle")}     ${ad.angle}\n`);
+    w.write(`  ${dim("Hook")}      ${bold(ad.hook)}\n`);
+    w.write(`  ${dim("Primary")}   ${ad.primary_text}\n`);
+    w.write(`  ${dim("Headline")}  ${ad.headline}\n`);
+    w.write(`  ${dim("CTA")}       [${ad.cta}]\n`);
+    w.write(`  ${dim("Offer")}     ${ad.offer}\n`);
+    w.write(`  ${dim("Visual")}    ${ad.visual_direction}\n`);
+    w.write(`  ${dim("Why")}       ${dim("insight —")} ${ad.reasoning.product_insight}\n`);
+    w.write(`            ${dim("angle —")} ${ad.reasoning.customer_angle}\n`);
+    w.write(`            ${dim("test —")} ${ad.reasoning.performance_hypothesis}\n`);
+  }
+  w.write("\n");
+}
+
+async function runAds(args: string[]): Promise<void> {
+  const { positional, flags } = parseArgs(args);
 
   const effort = (flags.effort ?? "high") as Effort;
   if (!EFFORTS.includes(effort)) {
@@ -83,51 +125,54 @@ async function run(mode: Mode, args: string[]): Promise<void> {
     );
   }
 
-  const brief: BrandBrief = {
-    name: flags.name,
-    website: flags.site,
-    description: positional.length > 0 ? positional.join(" ") : undefined,
-    goal: flags.goal,
-    audience: flags.audience,
-    stage: flags.stage,
-  };
-
-  if (!brief.name && !brief.description) {
+  const formatMix = (flags.format ?? "mixed") as FormatMix;
+  if (!FORMATS.includes(formatMix)) {
     throw new Error(
-      "Describe the brand: pass a description as text, or use --name.",
+      `Invalid --format "${flags.format}". Use one of: ${FORMATS.join(", ")}`,
     );
   }
 
-  const label = mode === "content" ? "marketing content" : "90-day growth plan";
-  process.stderr.write(
-    `${cyan(bold("Tempo"))} ${dim(`is researching and building your ${label}…`)}\n`,
-  );
-
-  let researched = false;
-  let answerStarted = false;
-
-  await runAgent(systemPrompt(mode), userPrompt(mode, brief), {
-    effort,
-    onSearch: (query) => {
-      researched = true;
-      process.stderr.write(dim(`  researching  ${query}\n`));
-    },
-    onText: noStream
-      ? undefined
-      : (delta) => {
-          if (!answerStarted) {
-            if (researched) process.stderr.write("\n");
-            answerStarted = true;
-          }
-          process.stdout.write(delta);
-        },
-  }).then((full) => {
-    if (noStream) {
-      process.stdout.write(`\n${full}\n`);
-    } else {
-      process.stdout.write("\n");
+  let count = 8;
+  if (flags.count !== undefined) {
+    count = Number.parseInt(flags.count, 10);
+    if (!Number.isInteger(count) || count < 1 || count > MAX_COUNT) {
+      throw new Error(`--count must be an integer between 1 and ${MAX_COUNT}.`);
     }
+  }
+
+  const brief: ProductBrief = {
+    name: flags.name,
+    brand: flags.brand,
+    url: flags.url,
+    description: positional.length > 0 ? positional.join(" ") : undefined,
+    price: flags.price,
+    audience: flags.audience,
+  };
+
+  if (!brief.name && !brief.description && !brief.url) {
+    throw new Error(
+      "Describe the product: pass a description as text, or use --name or --url.",
+    );
+  }
+
+  process.stderr.write(
+    `${cyan(bold("Tempo"))} ${dim("is researching your product…")}\n`,
+  );
+  const researchBrief = await research(brief, {
+    effort,
+    onSearch: (query) => process.stderr.write(dim(`  researching  ${query}\n`)),
   });
+
+  process.stderr.write(
+    dim(`\nWriting ${count} ad concept${count === 1 ? "" : "s"}…\n`),
+  );
+  const batch = await generateCreatives(brief, researchBrief, {
+    effort,
+    count,
+    formatMix,
+  });
+
+  renderBatch(batch);
 }
 
 async function main(): Promise<void> {
@@ -140,14 +185,14 @@ async function main(): Promise<void> {
     return;
   }
 
-  if (command !== "plan" && command !== "content") {
+  if (command !== "ads") {
     process.stderr.write(red(`Unknown command: ${command}\n\n`));
     printHelp();
     process.exitCode = 1;
     return;
   }
 
-  await run(command, argv.slice(1));
+  await runAds(argv.slice(1));
 }
 
 main().catch((error: unknown) => {

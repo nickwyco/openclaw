@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Tempo — The AI Head of Growth",
+  title: "Tempo — Agentic Growth Engine for Ecommerce",
   description:
-    "Tempo is an AI Head of Growth. Give it a brand and it researches the market, then delivers a 90-day growth plan.",
+    "Tempo studies your product and generates a weekly batch of Meta ad creative — persona angles, hooks, offers, and the reasoning behind every one.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
