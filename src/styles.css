@@ -1,0 +1,727 @@
+:root {
+  --bg: #15110d;
+  --bg-panel: #211a13;
+  --bg-card: #2c2218;
+  --bg-card-hi: #392c1d;
+  --ink: #e8ddc8;
+  --ink-dim: #a89878;
+  --gold: #d9a441;
+  --gold-bright: #f0c66b;
+  --blood: #a23b2c;
+  --steel: #6f8faf;
+  --good: #6fae5a;
+  --border: #4a3a26;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: radial-gradient(circle at 50% 0%, #2a2015, #15110d 70%);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Trajan Pro", "Iowan Old Style", Georgia, serif;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+/* --- Buttons ------------------------------------------------------------- */
+
+.btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.06s, border-color 0.12s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--bg-card-hi);
+  border-color: var(--gold);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #6a4d1f, #4a3416);
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #7d5c26, #5a4019);
+}
+
+.btn-good {
+  border-color: var(--good);
+  color: #bfe2af;
+}
+
+.btn-large {
+  font-size: 1.1rem;
+  padding: 0.85rem 1.6rem;
+}
+
+/* --- Centered / scrolling screens --------------------------------------- */
+
+.screen-center {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.screen-scroll {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.title-card {
+  max-width: 620px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 2.4rem;
+  text-align: center;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  font-size: 0.8rem;
+  margin: 0 0 0.6rem;
+}
+
+.title-main {
+  font-size: 2.3rem;
+  color: var(--gold-bright);
+  margin-bottom: 1rem;
+}
+
+.title-blurb {
+  color: var(--ink-dim);
+  margin-bottom: 1.4rem;
+}
+
+.title-features {
+  text-align: left;
+  display: inline-block;
+  color: var(--ink-dim);
+  margin: 0 0 1.6rem;
+  padding-left: 1.2rem;
+}
+
+.title-features li {
+  margin: 0.25rem 0;
+}
+
+/* --- Top bar & layout --------------------------------------------------- */
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.4rem;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.topbar-title h1 {
+  font-size: 1.25rem;
+  color: var(--gold-bright);
+}
+
+.topbar-room {
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+}
+
+.topbar-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.coin {
+  color: var(--gold);
+}
+
+.potion {
+  color: var(--blood);
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.6rem 2rem;
+}
+
+.side {
+  width: 360px;
+  border-left: 2px solid var(--border);
+  background: var(--bg-panel);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* --- Character creation -------------------------------------------------- */
+
+.create {
+  width: 100%;
+  max-width: 880px;
+}
+
+.section-title {
+  font-size: 1.7rem;
+  color: var(--gold-bright);
+  margin-bottom: 1rem;
+}
+
+.create-block {
+  margin-bottom: 1.8rem;
+}
+
+.create-block h2 {
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.text-input {
+  width: 100%;
+  max-width: 360px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.55rem 0.8rem;
+  background: var(--bg-card);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.7rem;
+}
+
+.option-card {
+  text-align: left;
+  font-family: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--ink);
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.option-card:hover {
+  border-color: var(--gold);
+}
+
+.option-card.is-chosen {
+  border-color: var(--gold-bright);
+  background: var(--bg-card-hi);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.option-name {
+  font-weight: 700;
+  color: var(--gold-bright);
+}
+
+.option-desc {
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+}
+
+.option-trait {
+  font-size: 0.8rem;
+  color: var(--steel);
+}
+
+.method-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.hint {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  margin: 0.4rem 0;
+}
+
+.ability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+.ability-cell {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.ability-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.ability-score {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+}
+
+.ability-mod {
+  color: var(--steel);
+}
+
+.ability-bonus {
+  font-size: 0.72rem;
+  color: var(--good);
+}
+
+/* --- Panels (party + log) ----------------------------------------------- */
+
+.panel {
+  padding: 0.9rem 1rem;
+  min-height: 0;
+}
+
+.party-panel {
+  border-bottom: 2px solid var(--border);
+}
+
+.panel-title {
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+
+.party-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.party-member {
+  display: flex;
+  flex-direction: column;
+}
+
+.xp-line {
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+  padding: 0.15rem 0.2rem 0;
+}
+
+.log-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.log-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  font-size: 0.88rem;
+}
+
+.log-line {
+  margin: 0.2rem 0;
+}
+
+.tone-normal {
+  color: var(--ink);
+}
+.tone-system {
+  color: var(--gold);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+}
+.tone-narrate {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+.tone-good {
+  color: var(--good);
+}
+.tone-bad {
+  color: var(--blood);
+  font-weight: 600;
+}
+.tone-hit {
+  color: var(--gold-bright);
+}
+.tone-miss {
+  color: var(--ink-dim);
+}
+
+/* --- Exploration --------------------------------------------------------- */
+
+.explore {
+  max-width: 720px;
+}
+
+.narrative {
+  background: var(--bg-panel);
+  border-left: 3px solid var(--gold);
+  padding: 0.9rem 1.1rem;
+  border-radius: 4px;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.narrative-after {
+  border-left-color: var(--good);
+  color: var(--ink-dim);
+}
+
+.explore-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+
+.exits-title {
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.exits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exit-btn {
+  text-align: left;
+}
+
+/* --- Combat -------------------------------------------------------------- */
+
+.combat {
+  max-width: 760px;
+}
+
+.combat-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.turn-indicator {
+  color: var(--gold-bright);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+}
+
+.group-title {
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin: 1rem 0 0.5rem;
+}
+
+.combatant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 0.6rem;
+}
+
+.action-bar {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+
+.action-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+}
+
+.action-card {
+  font-family: inherit;
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 0.8rem;
+  cursor: pointer;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.action-card:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--bg-card-hi);
+}
+
+.action-card:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-name {
+  font-weight: 700;
+  color: var(--gold-bright);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.action-uses {
+  font-size: 0.72rem;
+  color: var(--steel);
+  font-weight: 400;
+}
+
+.action-desc {
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+}
+
+/* --- Combatant card ------------------------------------------------------ */
+
+.combatant {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  position: relative;
+}
+
+.combatant.is-party {
+  border-left: 3px solid var(--steel);
+}
+
+.combatant.is-enemy {
+  border-left: 3px solid var(--blood);
+}
+
+.combatant.is-active {
+  box-shadow: 0 0 0 2px var(--gold-bright);
+}
+
+.combatant.is-down {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+
+.combatant.is-selectable {
+  cursor: pointer;
+}
+
+.combatant.is-selectable:hover {
+  box-shadow: 0 0 0 2px var(--good);
+}
+
+.combatant.is-compact {
+  padding: 0.5rem 0.6rem;
+}
+
+.combatant-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.combatant-name {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.combatant-ac {
+  font-size: 0.78rem;
+  color: var(--steel);
+  white-space: nowrap;
+}
+
+.combatant-sub {
+  font-size: 0.76rem;
+  color: var(--ink-dim);
+  margin-bottom: 0.35rem;
+}
+
+.hpbar {
+  position: relative;
+  height: 18px;
+  background: #120e09;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.hpbar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.hp-good {
+  background: linear-gradient(180deg, #6fae5a, #4d8038);
+}
+.hp-warn {
+  background: linear-gradient(180deg, #d9a441, #a9791f);
+}
+.hp-bad {
+  background: linear-gradient(180deg, #a23b2c, #75281d);
+}
+
+.hpbar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.buffs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.buff-chip {
+  font-size: 0.7rem;
+  background: #243044;
+  color: #aac4e0;
+  border: 1px solid #3a5170;
+  border-radius: 10px;
+  padding: 0.05rem 0.45rem;
+}
+
+/* --- End screen ---------------------------------------------------------- */
+
+.end-card.end-win {
+  border-color: var(--gold);
+}
+
+.end-card.end-lose {
+  border-color: var(--blood);
+}
+
+.end-summary {
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.4rem 0;
+}
+
+.end-summary h3 {
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.end-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+.end-row:last-child {
+  border-bottom: none;
+}
+
+.end-gold {
+  color: var(--gold);
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+/* --- Scrollbars ---------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+}
