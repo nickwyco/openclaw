@@ -1,0 +1,18 @@
+{
+  "name": "wyco-dymo-labels",
+  "version": "1.0.0",
+  "description": "WyCo Vintage Dymo label generator",
+  "scripts": {
+    "pdf": "node scripts/make-pdf.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:41729/git/nickwyco/openclaw"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright-core": "^1.61.1"
+  }
+}
