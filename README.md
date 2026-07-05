@@ -3,16 +3,17 @@
 Recreates the WyCo Vintage price/barcode label (item title, Code 128 barcode,
 price, logo) for DYMO LabelWriter printers.
 
-## Quick print (25 ready-made "$40 Rock Tee" labels)
+## Quick print (25 exact copies of the original label)
 
-Pre-generated PDFs are in `labels/` — one page per label, pick the one matching
-your label roll:
+`labels/rock-tee-40_EXACT-from-photo_25up_30336-1x2.125.pdf` contains 25 copies
+of the original label, extracted pixel-for-pixel from a photo of a printed
+label (deskewed, perspective-corrected, cleaned to pure black/white at 600 dpi;
+barcode machine-verified to scan as B07042601). Sized for DYMO 30336
+(1" x 2-1/8") labels — one page per label.
 
-- `rock-tee-40_25up_30336-1x2.125.pdf` — DYMO 30336 (1" × 2-1/8")
-- `rock-tee-40_25up_30334-1.25x2.25.pdf` — DYMO 30334 (1-1/4" × 2-1/4")
-
-Open on a computer where the LabelWriter is installed, print at 100% scale with
-margins set to none, and select the label size in the Dymo driver.
+Open it on a computer where the LabelWriter is installed, print at 100% scale
+with margins set to none, and select 30336 as the label size in the Dymo
+driver. `labels/label-artwork-600dpi.png` is the source artwork.
 
 ## Custom labels
 
